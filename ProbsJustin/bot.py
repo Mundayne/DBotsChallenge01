@@ -50,6 +50,8 @@ async def words(ctx, length: str=None):
         await ctx.send('You need to provide the amount of words as an int.')
         return
 
+    await ctx.message.add_reaction("\U00002705")
+
     run_generator = get_text(int(length))
     if len(run_generator) <= 1950:
         e = discord.Embed(colour=discord.Colour(0x278d89), description=f'{get_text(int(length))}')
@@ -68,6 +70,8 @@ async def paragraphs(ctx, length: str=None):
         await ctx.send('You need to provide the amount of paragraphs as an int.')
         return
 
+    await ctx.message.add_reaction("\U00002705")
+
     response_list = []
     for i in range(0, int(length)):
         response_list.append(get_text(random.randint(100, 250)))
@@ -81,6 +85,32 @@ async def paragraphs(ctx, length: str=None):
     message = 'The reply would exceed discord message length limit, here is the '
     e = discord.Embed(colour=discord.Colour(0x278d89), description=f'{message} [hastebin]({content}).')
     await ctx.send(embed=e)
+
+
+@gen.command()
+async def list(ctx, length: str=None):
+    if not length or not length.isdigit():
+        await ctx.send('You need to provide the amount of paragraphs as an int.')
+        return
+
+    await ctx.message.add_reaction("\U00002705")
+    embed = discord.Embed(colour=discord.Colour(0x278d89))
+    response_list = []
+    for i in range(0, int(length)):
+        response_list.append(get_text(random.randint(4, 15)))
+
+    new_line = ''
+    for item in response_list:
+        new_line += f'\U000025CF {item} \n'
+    if len(new_line) <= 1020:
+        embed.add_field(name='List Embed', value=new_line)
+        await ctx.send(embed=embed)
+
+    elif len(new_line) >= 1021:
+        content = await get_url(new_line)
+        message = 'The reply would exceed discord message length limit, here is the '
+        e = discord.Embed(colour=discord.Colour(0x278d89), description=f'{message} [hastebin]({content}).')
+        await ctx.send(embed=e)
 
 
 async def get_url(content):

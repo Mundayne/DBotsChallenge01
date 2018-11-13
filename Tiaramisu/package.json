@@ -1,0 +1,13 @@
+{
+  "name": "tiaramisu",
+  "version": "0.0.0",
+  "description": "Tiaramisu",
+  "main": "app.js",
+  "author": {
+    "name": "Tiaramisu"
+  },
+  "dependencies": {
+    "discord.js": "github:discordjs/discord.js",
+    "dotenv": "^6.1.0"
+  }
+}

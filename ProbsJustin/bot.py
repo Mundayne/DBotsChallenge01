@@ -58,7 +58,7 @@ def get_text(amount):
 async def gen(ctx):
     """generate random text, paragraphs or words."""
     if ctx.invoked_subcommand is None:
-        await ctx.send('What do you want to generate? Paragraphs or words?')
+        await ctx.send('What do you want to generate? Paragraphs, lists or words?')
 
 
 @gen.command()
@@ -92,7 +92,7 @@ async def paragraphs(ctx, length: str=None):
 
     response_list = []
     for i in range(0, int(length)):
-        response_list.append(get_text(random.randint(100, 250)))
+        response_list.append(get_text(random.randint(100, 200)))
 
     counter = 0
     new_line = ''
@@ -105,14 +105,14 @@ async def paragraphs(ctx, length: str=None):
     await ctx.send(embed=e)
 
 
-@gen.command()
-async def list(ctx, length: str=None):
+@gen.command(name='list')
+async def _list(ctx, length: str=None):
+    """generate a list of items by length"""
     if not length or not length.isdigit():
         await ctx.send('You need to provide the amount of paragraphs as an int.')
         return
 
     await ctx.message.add_reaction("\U00002705")
-    embed = discord.Embed(colour=discord.Colour(0x278d89))
     response_list = []
     for i in range(0, int(length)):
         response_list.append(get_text(random.randint(4, 15)))
@@ -121,8 +121,8 @@ async def list(ctx, length: str=None):
     for item in response_list:
         new_line += f'\U000025CF {item} \n'
     if len(new_line) <= 1020:
-        embed.add_field(name='List Embed', value=new_line)
-        await ctx.send(embed=embed)
+        e = discord.Embed(colour=discord.Colour(0x278d89), description=f'{new_line}')
+        await ctx.send(embed=e)
 
     elif len(new_line) >= 1021:
         content = await get_url(new_line)
@@ -161,4 +161,3 @@ async def create_aiohttp():
 bot.loop.create_task(create_aiohttp())
 bot.loop.create_task(download_scripts())
 bot.run(start())
-

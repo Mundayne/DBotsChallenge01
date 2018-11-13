@@ -19,7 +19,7 @@ def start():
     with open('config.json', 'r') as f:
         data = json.load(f)
         if not data.get('config').get('token'):
-            print('please enter your token in config.json')
+            print('please enter your token in config.json, you will need to re-run this program, it will close...')
             os.system("pause")
         token = data.get('config').get('token')
         return token

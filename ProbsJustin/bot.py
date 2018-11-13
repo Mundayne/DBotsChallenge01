@@ -140,7 +140,8 @@ async def get_url(content):
 
 async def download_scripts():
     if not os.path.exists(f"./scripts.txt"):
-        async with bot.aiohttp.get(url='https://cgg.website/dbchallenge/scripts.txt') as resp:
+        url = 'https://raw.githubusercontent.com/SobieskiCodes/DBotsChallenge01/master/ProbsJustin/scripts.txt'
+        async with bot.aiohttp.get(url=url) as resp:
             filename = os.path.basename('scripts.txt')
             with open(filename, 'wb') as f_handle:
                 while True:

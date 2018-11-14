@@ -33,24 +33,31 @@ async def on_ready():
     print('------')
 
 
-def get_text(amount):
-    output = ''
-    with open('scripts.txt', 'r', encoding='utf-8') as f:
-        phrases = f.read()
-        phrases = phrases.split('\n')
-        list_of_phrases = []
+phrasedict = {}
+
+
+def populate_phrases(filename):
+    if phrasedict:
+        return
+    with open(filename, 'r', encoding='utf-8') as f:
+        phrases = f.read().splitlines()
         for phrase in phrases:
-            if len(phrase.split(' ')) == amount:
-                list_of_phrases.append(phrase)
+            phrasedict.setdefault(len(phrase.split(" ")), list()).append(phrase)
 
-        if list_of_phrases != []:
-            return random.choice(list_of_phrases)
 
-    while amount != 0:
-        valid = list(phrase for phrase in phrases if len(phrase.split(" ")) <= amount)
-        picked = random.choice(valid)
-        output += f'{picked} '
-        amount -= len(picked.split(" "))
+def get_text(amount):
+    output = ""
+    populate_phrases('scripts.txt')
+
+    if amount in phrasedict.keys():
+        picked = random.choice(phrasedict[amount])
+        return picked
+
+    while amount > 0:
+        picked_len = random.choice([k for k in phrasedict.keys() if k <= amount])
+        picked = random.choice(phrasedict[picked_len])
+        output += picked
+        amount -= picked_len
     return output
 
 
@@ -76,9 +83,14 @@ async def words(ctx, length: str=None):
         await ctx.send(embed=e)
     else:
         content = await get_url(run_generator)
-        message = 'The reply would exceed discord message length limit, here is the '
-        e = discord.Embed(colour=discord.Colour(0x278d89), description=f'{message} [hastebin]({content}).')
-        await ctx.send(embed=e)
+        if content != 'invalid':
+            message = 'The reply would exceed discord message length limit, here is the '
+            e = discord.Embed(colour=discord.Colour(0x278d89), description=f'{message} [hastebin]({content}).')
+            await ctx.send(embed=e)
+        else:
+            message = 'The reply would exceed discord message length limit, and hastebins.'
+            e = discord.Embed(colour=discord.Colour(0x278d89), description=f'{message}')
+            await ctx.send(embed=e)
 
 
 @gen.command()
@@ -100,9 +112,14 @@ async def paragraphs(ctx, length: str=None):
         new_line += f" paragraph: {counter} - {item} \n"
         counter += 1
     content = await get_url(new_line)
-    message = 'The reply would exceed discord message length limit, here is the '
-    e = discord.Embed(colour=discord.Colour(0x278d89), description=f'{message} [hastebin]({content}).')
-    await ctx.send(embed=e)
+    if content != 'invalid':
+        message = 'The reply would exceed discord message length limit, here is the '
+        e = discord.Embed(colour=discord.Colour(0x278d89), description=f'{message} [hastebin]({content}).')
+        await ctx.send(embed=e)
+    else:
+        message = 'The reply would exceed discord message length limit, and hastebins.'
+        e = discord.Embed(colour=discord.Colour(0x278d89), description=f'{message}')
+        await ctx.send(embed=e)
 
 
 @gen.command(name='list')
@@ -126,16 +143,25 @@ async def _list(ctx, length: str=None):
 
     elif len(new_line) >= 1021:
         content = await get_url(new_line)
-        message = 'The reply would exceed discord message length limit, here is the '
-        e = discord.Embed(colour=discord.Colour(0x278d89), description=f'{message} [hastebin]({content}).')
-        await ctx.send(embed=e)
+        if content != 'invalid':
+            message = 'The reply would exceed discord message length limit, here is the '
+            e = discord.Embed(colour=discord.Colour(0x278d89), description=f'{message} [hastebin]({content}).')
+            await ctx.send(embed=e)
+        else:
+            message = 'The reply would exceed discord message length limit, and hastebins.'
+            e = discord.Embed(colour=discord.Colour(0x278d89), description=f'{message}')
+            await ctx.send(embed=e)
 
 
 async def get_url(content):
     async with bot.aiohttp.post('https://haste.discordbots.mundane.tk/documents', data=content.encode('utf-8')) as resp:
-        key = await resp.json()
-        url = f'https://haste.discordbots.mundane.tk/{key["key"]}.txt'
-        return url
+        if resp.status == 200:
+            key = await resp.json()
+            url = f'https://haste.discordbots.mundane.tk/{key["key"]}.txt'
+            return url
+        else:
+            return 'invalid'
+
 
 
 async def download_scripts():

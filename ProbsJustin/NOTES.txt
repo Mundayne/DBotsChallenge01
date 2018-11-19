@@ -1,0 +1,10 @@
+=== Mundane ===
+- There are some amounts of words at high numbers (eg. 95, 96, 100, 110 and probably more) that seem to only have 
+one possible combination of words.
++ However, there are 23772 sentences and thus theoretically ~2.360663362e+93706 combinations.
++ Range of generation options (paragraphs, words, list) with theoretically no limit on the amount generated.
+- Using default commands module thing, which is boring.
+- You used 'e' as the variable name for your embed. That's lazy and ambiguous. Properly named variables are important for clean, readable code.
+- Type on line 91/120/151 (hastebins -> hastebin's).
+- Just because this is a challenge for coders, doesn't mean output or errors should use jargon. int -> number, for example (line 100/129).
+- There's a fair amount of repeated code in your generation, which could easily have been removed and placed in a seperate function.

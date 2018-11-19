@@ -1,0 +1,6 @@
+=== Mundane ===
+- There are some amounts of words at high numbers (eg. 95, 96, 100, 110 and probably more) that seem to only have 
+one possible combination of words (ie. not randomly generated).
+- The number 29 in your generation code should really be a defined constant, as should the limit of 2000 characters.
++ Custom command handler is nice.
+- It's a bit annoying that I can't just run `?lero 4` and get the 4 sentences - I have to give the amount afterwards, which is both long-winded and a little bit chat-spammy.

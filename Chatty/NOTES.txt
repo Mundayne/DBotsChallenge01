@@ -1,0 +1,5 @@
+=== Mundane ===
+- After 30 minutes of updating python, pip, rewrite and messing about with my path, I couldn't get it to run.
++ 1.589760377e+161786 combinations of purely words, not including the random formatting you apply, so by far the most random.
+- Using default commands module thing, which is boring.
++ Nice way of ensuring token is provided.

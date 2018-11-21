@@ -1,16 +1,26 @@
-﻿using System;
+﻿using Discord.Commands;
+using System;
 using System.Globalization;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace LoremIpsum
 {
-    public class LoremIpsum
+    public class LoremIpsum : ModuleBase
     {
-        //Read all text from the file
-        private string[] _Content = File.ReadAllText("Input.txt").Split(' ');
+        [Command("lorem")]
+        public async Task LoremIpsumCommand([Remainder]string args)
+        {
+            string[] arg = args.Split(' ');
 
+            if (int.TryParse(arg[0], out int sentencesInParagraph) && int.TryParse(arg[1], out int paragraphs))
+            {
+                await Context.Channel.SendMessageAsync(NewLoremIpsum(sentencesInParagraph, paragraphs));
+            }
+        }
         public string NewLoremIpsum(int sentencesInParagraph, int paragraphs)
         {
+            string[] _Content = File.ReadAllText("Input.txt").Split(' ');
             string output = "\t";
             //create paragraph
             for (int i = 0; i < paragraphs; i++)

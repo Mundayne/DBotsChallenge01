@@ -35,12 +35,12 @@ namespace LoremIpsum
                         else
                             sentence[k] = _Content[random];
                     }
-
+                    //join sentence to the output
                     output += string.Join(' ', sentence);
                 }
+                //add new paragraph
                 output += "\n\t";
             }
-            output = output.Replace("\r", string.Empty);
             return output;
         }
     }
